@@ -36,3 +36,4 @@ yarn-error.log*
 
 # IntelliJ
 /.idea/
+/.env.local
