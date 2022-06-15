@@ -21,9 +21,9 @@ const FigurePage: NextPage<Props> = ({ figure }) => (
 );
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const figureSlugs: Array<Figure> = await api.getFigures();
+  const figures: Array<Figure> = await api.getFigures();
   return {
-    paths: figureSlugs.map(({ slug }) => ({ params: { slug } })),
+    paths: figures.map(({ slug }) => ({ params: { slug } })),
     fallback: false,
   };
 };
