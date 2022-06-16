@@ -2,14 +2,14 @@ import { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
 
-import { Figure } from "../../model/interface/Figure";
 import { api } from "../../utils/api";
+import { FigurePreview } from "../../model/type/FigurePreview";
 
 interface Props {
-  figures: Array<Figure>;
+  figurePreviews: Array<FigurePreview>;
 }
 
-const Figures: NextPage<Props> = ({ figures }) => (
+const Figures: NextPage<Props> = ({ figurePreviews }) => (
   <div>
     <Head>
       <title>Figures</title>
@@ -17,7 +17,7 @@ const Figures: NextPage<Props> = ({ figures }) => (
 
     <main>
       <ul>
-        {figures.map(({ slug, name }) => (
+        {figurePreviews.map(({ slug, name }) => (
           <li key={slug}>
             <Link href={`/figures/${slug}`}>
               <a>{name}</a>
@@ -30,8 +30,8 @@ const Figures: NextPage<Props> = ({ figures }) => (
 );
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const figures: Array<Figure> = await api.getFigures();
-  return { props: { figures } };
+  const figurePreviews: Array<FigurePreview> = await api.getFigurePreviews();
+  return { props: { figurePreviews } };
 };
 
 export default Figures;

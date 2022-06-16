@@ -3,6 +3,7 @@ import Head from "next/head";
 
 import { api } from "../../utils/api";
 import { Figure } from "../../model/interface/Figure";
+import { FigurePreview } from "../../model/type/FigurePreview";
 
 interface Props {
   figure: Figure;
@@ -21,9 +22,9 @@ const FigurePage: NextPage<Props> = ({ figure }) => (
 );
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const figures: Array<Figure> = await api.getFigures();
+  const figurePreviews: Array<FigurePreview> = await api.getFigurePreviews();
   return {
-    paths: figures.map(({ slug }) => ({ params: { slug } })),
+    paths: figurePreviews.map(({ slug }) => ({ params: { slug } })),
     fallback: false,
   };
 };
