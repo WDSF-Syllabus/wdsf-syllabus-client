@@ -2,9 +2,11 @@ import axios, { AxiosResponse } from "axios";
 
 import { flattenApiData } from "./flattenApiData";
 import { Figure } from "../model/interface/Figure";
-import { ApiResponse } from "../model/interface/ApiResponse";
+import { ApiResponseWithMeta } from "../model/interface/ApiResponseWithMeta";
 import { ApiData } from "../model/interface/ApiData";
 import { FigurePreview } from "../model/type/FigurePreview";
+import { mapper } from "./mapper";
+import { FigureApiResponse } from "../model/interface/FigureApiResponse";
 
 const apiUrl = process.env.API_URL;
 const token = process.env.API_TOKEN;
@@ -18,11 +20,11 @@ const http = axios.create({
 
 async function getFigure(slug: string): Promise<Figure> {
   const url = `/figures/${slug}`;
-  const response = await http.get<ApiResponse<ApiData<Figure>>>(url);
-  return flattenApiData(response.data.data);
+  const response = await http.get<ApiResponseWithMeta<FigureApiResponse>>(url);
+  return mapper.fromFigureApiResponseToFigure(response.data.data);
 }
 
-type FigurePreviewResponse = ApiResponse<Array<ApiData<FigurePreview>>>;
+type FigurePreviewResponse = ApiResponseWithMeta<Array<ApiData<FigurePreview>>>;
 
 async function getFigurePreviews(): Promise<Array<FigurePreview>> {
   const url = "/figures";
