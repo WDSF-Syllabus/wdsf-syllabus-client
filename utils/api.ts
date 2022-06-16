@@ -21,25 +21,21 @@ async function getFigure(slug: string): Promise<Figure> {
   return flattenApiData(response.data.data);
 }
 
+type GetFiguresResponse = ApiResponse<Array<ApiData<Figure>>>;
+
 async function getFigures(): Promise<Array<Figure>> {
   const url = "/figures";
   const figures: Array<Figure> = [];
   const params = new URLSearchParams();
   params.append("pagination[pageSize]", "100");
   params.append("pagination[page]", "1");
-  const response = await http.get<ApiResponse<Array<ApiData<Figure>>>>(url, {
-    params,
-  });
+  const response = await http.get<GetFiguresResponse>(url, { params });
   figures.push(...response.data.data.map(flattenApiData));
   const pageCount = response.data.meta.pagination.pageCount;
-  const promises: Array<
-    Promise<AxiosResponse<ApiResponse<Array<ApiData<Figure>>>>>
-  > = [];
+  const promises: Array<Promise<AxiosResponse<GetFiguresResponse>>> = [];
   for (let page = 2; page <= pageCount; page++) {
     params.set("pagination[page]", `${page}`);
-    const promise = http.get<ApiResponse<Array<ApiData<Figure>>>>(url, {
-      params,
-    });
+    const promise = http.get<GetFiguresResponse>(url, { params });
     promises.push(promise);
   }
   const responses = await Promise.all(promises);
