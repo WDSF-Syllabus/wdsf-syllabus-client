@@ -4,22 +4,22 @@ import Head from "next/head";
 import Link from "next/link";
 
 import { api } from "../../utils/api";
-import { FigurePreview } from "../../model/type/FigurePreview";
 import { FigureSearch } from "../../components/FigureSearch";
+import { Figure } from "../../model/interface/Figure";
 
 interface Props {
-  figurePreviews: Array<FigurePreview>;
+  figures: Array<Figure>;
 }
 
-const Figures: NextPage<Props> = ({ figurePreviews }) => {
+const Figures: NextPage<Props> = ({ figures }) => {
   const [search, setSearch] = useState("");
 
-  const filteredFigurePreviews = useMemo<FigurePreview[]>(() => {
+  const filteredFigures = useMemo<Figure[]>(() => {
     const lowerCaseSearch = search.toLowerCase();
-    return figurePreviews.filter(({ name }) =>
+    return figures.filter(({ name }) =>
       name.toLowerCase().includes(lowerCaseSearch)
     );
-  }, [figurePreviews, search]);
+  }, [figures, search]);
 
   return (
     <div>
@@ -31,10 +31,10 @@ const Figures: NextPage<Props> = ({ figurePreviews }) => {
         <FigureSearch value={search} onChange={setSearch} />
         <main>
           <ul>
-            {filteredFigurePreviews.map(({ slug, name }) => (
-              <li key={slug}>
-                <Link href={`/figures/${slug}`}>
-                  <a>{name}</a>
+            {filteredFigures.map((figure) => (
+              <li key={figure.slug}>
+                <Link href={`/figures/${figure.slug}`}>
+                  <a>{figure.name}</a>
                 </Link>
               </li>
             ))}
@@ -46,8 +46,8 @@ const Figures: NextPage<Props> = ({ figurePreviews }) => {
 };
 
 export const getStaticProps: GetStaticProps<Props> = async () => {
-  const figurePreviews: Array<FigurePreview> = await api.getFigurePreviews();
-  return { props: { figurePreviews } };
+  const figures: Array<Figure> = await api.getFigures();
+  return { props: { figures } };
 };
 
 export default Figures;
